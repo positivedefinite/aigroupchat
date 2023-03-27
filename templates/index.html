@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Chat with AI</title>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css">
+    <!-- Other head elements -->
+    <link rel="icon" href="/static/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/static/apple-touch-icon.png">
+    <link rel="apple-touch-icon-precomposed" sizes="180x180" href="/static/apple-touch-icon-precomposed.png">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mt-5">Group Chat with AI</h1>
+        <div id="chat" class="border mt-5" style="height: 400px; overflow-y: auto; padding: 15px;"></div>
+        <div class="input-group mt-3">
+            <input type="text" id="message" class="form-control" placeholder="Type your message...">
+            <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <script src="/static/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const chat = document.getElementById("chat");
+        const messageInput = document.getElementById("message");
+        const username = prompt("Enter your username:");
+
+        const socket = new WebSocket(`ws://${window.location.host}/ws/${username}`);
+
+        socket.addEventListener("message", (event) => {
+        const messageElem = document.createElement("div");
+        messageElem.className = "mb-2";
+        messageElem.textContent = event.data;
+        chat.appendChild(messageElem);
+        chat.scrollTop = chat.scrollHeight;
+        });
+        function sendMessage() {
+            const content = messageInput.value;
+            if (content.trim() === "") return;
+            messageInput.value = "";
+            socket.send(content);
+        }
+
+        messageInput.addEventListener("keyup", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

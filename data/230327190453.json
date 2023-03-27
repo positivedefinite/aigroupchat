@@ -1,0 +1,21 @@
+{
+  "id": "chatcmpl-6ykYeAIWqWx1ljI8HzMAlycLG0SPQ",
+  "object": "chat.completion",
+  "created": 1679936668,
+  "model": "gpt-4-0314",
+  "usage": {
+    "prompt_tokens": 24,
+    "completion_tokens": 196,
+    "total_tokens": 220
+  },
+  "choices": [
+    {
+      "message": {
+        "role": "assistant",
+        "content": "You can use the following Python code to print all prime numbers until 100:\n\n```python\ndef is_prime(n):\n    if n <= 1:\n        return False\n    elif n <= 3:\n        return True\n    elif n % 2 == 0 or n % 3 == 0:\n        return False\n    i = 5\n    while i * i <= n:\n        if n % i == 0 or n % (i + 2) == 0:\n            return False\n        i += 6\n    return True\n\nfor num in range(100):\n    if is_prime(num):\n        print(num)\n```\n\nThis code first defines a utility function `is_prime()` to check if a number is prime or not. Then, it iterates through the numbers from 0 to 99 (inclusive), checks if each number is prime using the `is_prime()` function, and prints it if it is prime."
+      },
+      "finish_reason": "stop",
+      "index": 0
+    }
+  ]
+}

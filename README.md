@@ -1,20 +1,5 @@
-# aigroupchat
-Create a web application with the following requirements:
-1. It uses a CSS template that makes it look pretty
-2. Any number of users can chat in one common chat with AI
+Create a web application using FastAPI and OpenAI API with the following requirements:
+1. The frontend uses a CSS template that makes it look pretty
+2. The frontend communicate with a public API at 127.0.0.1:8000
 3. After ANY user input, the AI answers
-4. Everybody sees all the messages and message history (stored in a local file)
-
-Use Python with FastAPI and uvicorn.
-
-Use OpenAI API like this:
-import openai
-response = openai.ChatCompletion.create(
-  model="gpt-4",
-  messages=[
-        {"role": "system", "content": ""},
-        {"role": "user", "content": "Please don't stop the music"},
-    ]
-)
-
-print(response)
+4. The backend exposes an API at 127.0.0.1:8000

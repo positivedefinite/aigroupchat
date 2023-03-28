@@ -27,19 +27,28 @@
 
         const socket = new WebSocket(`ws://${window.location.host}/ws/${username}`);
 
-        socket.addEventListener("message", (event) => {
-        const messageElem = document.createElement("div");
-        messageElem.className = "mb-2";
-        messageElem.textContent = event.data;
-        chat.appendChild(messageElem);
-        chat.scrollTop = chat.scrollHeight;
-        });
         function sendMessage() {
-            const content = messageInput.value;
-            if (content.trim() === "") return;
-            messageInput.value = "";
-            socket.send(content);
-        }
+        const content = messageInput.value.trim();
+        if (content === "") return;
+        messageInput.value = "";
+
+        fetch("http://127.0.0.1:8000", {
+          method: "POST",
+          body: JSON.stringify({ username, content }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            const messageElem = document.createElement("div");
+            messageElem.className = "mb-2";
+            messageElem.textContent = data.message;
+            chat.appendChild(messageElem);
+            chat.scrollTop = chat.scrollHeight;
+          })
+          .catch((error) => console.error(error));
+      }
 
         messageInput.addEventListener("keyup", (event) => {
             if (event.key === "Enter") {

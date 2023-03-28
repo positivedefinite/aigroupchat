@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/main.css">
+    <title>AI Chat App</title>
+</head>
+<body>
+    <div id="chat">
+    </div>
+    <input type="text" id="message" autofocus>
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        const chat = document.getElementById("chat");
+        const messageInput = document.getElementById("message");
+
+        async function sendMessage() {
+            const content = messageInput.value;
+            messageInput.value = "";
+
+            const userMessage = document.createElement("p");
+            userMessage.textContent = "User: " + content;
+            chat.appendChild(userMessage);
+
+            const response = await fetch("/generate_response", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({content}),
+            });
+            const data = await response.json();
+            const aiMessage = document.createElement("p");
+            aiMessage.textContent = "AI: " + data.message;
+            chat.appendChild(aiMessage);
+        }
+
+        messageInput.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>

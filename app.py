@@ -1,4 +1,6 @@
 key = "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"
+instruction = "Keep your answers short and to the point, while following the instructions and being helpful if they are unclear."
+instruction = "Respond only in JSON format {\n'response':'<your response goes here>',\n'inner_thoughts':'<your hidden throughts about the query>'}"
 import json
 import time
 import openai
@@ -21,7 +23,6 @@ class Message(BaseModel):
     content: str
 
 chat_history = []
-
 
 async def get_chat_history():
     return chat_history
@@ -53,7 +54,7 @@ async def websocket_endpoint(websocket: WebSocket, username: str, chat_history: 
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[
-                {"role": "system", "content": "Keep your answers short and to the point, while following the instructions and being helpful if they are unclear."},
+                {"role": "system", "content": instruction},
                 {"role": "user", "content": data},
             ]
         )

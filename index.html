@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Text Storage</title>
+    <title>GroupGPT</title>
+    <style>
+        #response {
+            white-space: pre-wrap;
+        }
+    </style>
     <script>
         async function sendText() {
             const textInput = document.getElementById("text-input");
@@ -18,17 +23,17 @@
             });
 
             const jsonResponse = await response.json();
-            responseDiv.textContent = jsonResponse.message || jsonResponse.error;
+            responseDiv.textContent = jsonResponse.history.map((item, index) => `${index + 1}. Input: ${item.input}\n   Response: ${item.response}`).join('\n');
         }
     </script>
 </head>
 <body>
-    <h1>Text Storage</h1>
-    <form onsubmit="event.preventDefault(); sendText();">
-        <label for="text-input">Enter your text:</label>
-        <input type="text" id="text-input" name="text" required>
-        <button type="submit">Submit</button>
-    </form>
+    <h1>GroupGPT</h1>
     <div id="response"></div>
+    <form onsubmit="event.preventDefault(); sendText();">
+        <label for="text-input">You:</label>
+        <input type="text" id="text-input" name="text" required>
+        <button type="submit">Send</button>
+    </form>
 </body>
 </html>

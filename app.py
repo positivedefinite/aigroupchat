@@ -1,14 +1,18 @@
-# app.py
+"""
+Setup (Windows):
+>>>$Env:openai='sk-m0Rf61S0m3rLgrOJhfFlT3BlbkFJBdObVoF2CCPIppyvoJ' but add '7k' at the end
+>>>python app.py
+"""
 import json, os, openai
 from flask import Flask, request, jsonify, send_from_directory
 
 app = Flask(__name__, static_folder=".")
-openai.api_key = os.environ["OPENAI_API_KEY"]
+openai.api_key = os.environ["openai"]
 instruction = "Keep your answers short and to the point, while following the instructions and being helpful if they are unclear."
 
 @app.route('/')
 def index():
-    return send_from_directory('.', 'index3.html')
+    return send_from_directory('.', 'index.html')
 
 @app.route('/store_text', methods=['POST'])
 def store_text():
@@ -22,7 +26,7 @@ def store_text():
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": ""},
-                {"role": "user", "content": "Hello?"},
+                {"role": "user", "content": text},
             ]
         )
         openai_response = response.choices[0].message.content
@@ -42,9 +46,7 @@ def store_text():
         f.seek(0)
         f.truncate()
         json.dump(history, f)
-
-    return jsonify({"message": f"Text stored successfully with history {history}"}), 200
-
+    return jsonify({"message": "Text stored successfully", "history": history, "response": openai_response}), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

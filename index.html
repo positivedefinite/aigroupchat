@@ -14,12 +14,12 @@
             const responseDiv = document.getElementById("response");
             const response = await fetch("/get_history");
             const jsonResponse = await response.json();
-            responseDiv.textContent = jsonResponse.history.map((item, index) => `${index + 1}. Input: ${item.input}\n   Response: ${item.response}`).join('\n');
+            responseDiv.textContent = jsonResponse.history.map((item, index) => `User: ${item.input}\nGPT-4: ${item.response}`).join('\n');
         }
-
+    
         async function sendText() {
             const textInput = document.getElementById("text-input");
-
+    
             const response = await fetch("/store_text", {
                 method: "POST",
                 headers: {
@@ -27,13 +27,16 @@
                 },
                 body: `text=${encodeURIComponent(textInput.value)}`,
             });
-
+    
             const jsonResponse = await response.json();
             fetchHistory();
         }
-
-        window.onload = fetchHistory;
-    </script>
+    
+        window.onload = () => {
+            fetchHistory();
+            setInterval(fetchHistory, 7000);
+        };
+    </script>    
 </head>
 <body>
     <h1>GroupGPT</h1>

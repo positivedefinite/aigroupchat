@@ -14,6 +14,16 @@ instruction = "Keep your answers short and to the point, while following the ins
 def index():
     return send_from_directory('.', 'index.html')
 
+@app.route('/get_history', methods=['GET'])
+def get_history():
+    with open('history.json', 'r') as f:
+        try:
+            history = json.load(f)
+        except json.JSONDecodeError:
+            history = []
+
+    return jsonify({"history": history}), 200
+
 @app.route('/store_text', methods=['POST'])
 def store_text():
     text = request.form.get('text')

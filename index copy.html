@@ -10,15 +10,9 @@
         }
     </style>
     <script>
-        async function fetchHistory() {
-            const responseDiv = document.getElementById("response");
-            const response = await fetch("/get_history");
-            const jsonResponse = await response.json();
-            responseDiv.textContent = jsonResponse.history.map((item, index) => `${index + 1}. Input: ${item.input}\n   Response: ${item.response}`).join('\n');
-        }
-
         async function sendText() {
             const textInput = document.getElementById("text-input");
+            const responseDiv = document.getElementById("response");
 
             const response = await fetch("/store_text", {
                 method: "POST",
@@ -29,10 +23,8 @@
             });
 
             const jsonResponse = await response.json();
-            fetchHistory();
+            responseDiv.textContent = jsonResponse.history.map((item, index) => `${index + 1}. Input: ${item.input}\n   Response: ${item.response}`).join('\n');
         }
-
-        window.onload = fetchHistory;
     </script>
 </head>
 <body>

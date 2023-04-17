@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.4.1/socket.io.min.js" integrity="sha512-2OZV4gkYORdlA7zv/vX4c5cFAlsaV7L+ZCfJr7hqmq6CNDU+7GCjXfQHyE7v5LQsU6qDk6Z0x6JBYz1lZO+j6g==" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div id="chat">
+        <ul id="messages"></ul>
+        <form id="messageForm">
+            <input id="message" type="text" placeholder="Type your message here...">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <script>
+        const socket = io();
+        const messageForm = document.getElementById('messageForm');
+        const messages = document.getElementById('messages');
+        const messageInput = document.getElementById('message');
+    
+        messageForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const message = messageInput.value;
+            socket.emit('message', message);
+            messageInput.value = '';
+        });
+    
+        socket.on('broadcast_message', (message) => {
+            const li = document.createElement('li');
+            li.innerText = message;
+            messages.appendChild(li);
+        });
+    </script>
+    
+</body>
+</html>

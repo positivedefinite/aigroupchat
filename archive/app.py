@@ -22,11 +22,20 @@ class Message(BaseModel):
     username: str
     content: str
 
-chat_history = []
+with open("history_template.json", "r") as f:
+    text = f.read()
+    history = json.loads(text)
+    json.dump(history, open('history.json','w'))
+
+with open("history.json", "r") as f:
+    text = f.read()
+    chat_history = json.loads(text)
 
 async def get_chat_history():
+    with open("history.json", "r") as f:
+        text = f.read()
+        chat_history = json.loads(text)
     return chat_history
-
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
@@ -38,10 +47,10 @@ async def websocket_endpoint(websocket: WebSocket, username: str, chat_history: 
     await websocket.accept()
     print(f"User registered {username}")
     # Send the chat history to the new user
-    with open("message_history.json", "r") as f:
+    with open("history.json", "r") as f:
         chat_history_data = json.load(f)
         for message in chat_history_data:
-            await websocket.send_text(f"{message['username']}: {message['content']}")
+            await websocket.send_text(f"{message['user']}: {message['message']}")
     print(f"Chat history loaded for {username}")
     while True:
         data = await websocket.receive_text()
@@ -58,7 +67,7 @@ async def websocket_endpoint(websocket: WebSocket, username: str, chat_history: 
                 {"role": "user", "content": data},
             ]
         )
-        ai_message = response.choices[0].message["content"]
+        ai_message = response.choices[0].text
         chat_history.append(Message(username="Hackabrain", content=ai_message))
         await websocket.send_text(f"Hackabrain: {ai_message}")
 
